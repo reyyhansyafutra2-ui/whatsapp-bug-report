@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Bug Report - Aplikasi Pelaporan Bug</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .wa-icon {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group input[type="date"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #25D366;
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #25D366;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .priority-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .priority-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .priority-btn:hover {
+            border-color: #25D366;
+        }
+
+        .priority-btn.active {
+            border-color: #25D366;
+            background: #25D366;
+            color: white;
+        }
+
+        .priority-btn.critical {
+            border-color: #ff4757;
+        }
+
+        .priority-btn.critical.active {
+            background: #ff4757;
+            border-color: #ff4757;
+        }
+
+        .priority-btn.warning {
+            border-color: #ffa502;
+        }
+
+        .priority-btn.warning.active {
+            background: #ffa502;
+            border-color: #ffa502;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            border: 2px dashed #25D366;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #f0fdf4;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #25D366;
+        }
+
+        .file-upload input[type="file"]:hover + label,
+        .file-upload label:hover {
+            background: #d4f8d4;
+        }
+
+        .file-name {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-reset {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-reset:hover {
+            background: #e0e0e0;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #25D366;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .form-container {
+                padding: 30px 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .priority-group {
+                flex-direction: column;
+            }
+
+            .priority-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <span class="wa-icon">💬</span>
+                WhatsApp Bug Report
+            </h1>
+            <p>Laporkan masalah atau bug yang Anda temukan</p>
+        </div>
+
+        <div class="form-container">
+            <div class="alert" id="alert"></div>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Mengirim laporan...</p>
+            </div>
+
+            <form id="bugReportForm" onsubmit="handleSubmit(event)">
+                <!-- Nama Pengguna -->
+                <div class="form-group">
+                    <label for="fullName">Nama Lengkap *</label>
+                    <input type="text" id="fullName" name="fullName" required placeholder="Masukkan nama Anda">
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required placeholder="nama@email.com">
+                </div>
+
+                <!-- Nomor WhatsApp -->
+                <div class="form-group">
+                    <label for="whatsapp">Nomor WhatsApp *</label>
+                    <input type="tel" id="whatsapp" name="whatsapp" required placeholder="62812345678">
+                </div>
+
+                <!-- Prioritas Bug -->
+                <div class="form-group">
+                    <label>Tingkat Prioritas *</label>
+                    <div class="priority-group">
+                        <button type="button" class="priority-btn" data-priority="low" onclick="setPriority('low')">
+                            🟢 Rendah
+                        </button>
+                        <button type="button" class="priority-btn warning" data-priority="medium" onclick="setPriority('medium')">
+                            🟡 Sedang
+                        </button>
+                        <button type="button" class="priority-btn critical" data-priority="high" onclick="setPriority('high')">
+                            🔴 Tinggi
+                        </button>
+                    </div>
+                    <input type="hidden" id="priority" name="priority" value="">
+                </div>
+
+                <!-- Jenis Bug -->
+                <div class="form-group">
+                    <label>Jenis Bug *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="crash" name="bugType" value="crash">
+                            <label for="crash">Crash</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ui" name="bugType" value="ui">
+                            <label for="ui">UI/UX</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="performance" name="bugType" value="performance">
+                            <label for="performance">Performa</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="notification" name="bugType" value="notification">
+                            <label for="notification">Notifikasi</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="security" name="bugType" value="security">
+                            <label for="security">Keamanan</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Perangkat -->
+                <div class="form-group">
+                    <label for="device">Jenis Perangkat *</label>
+                    <select id="device" name="device" required>
+                        <option value="">Pilih Perangkat</option>
+                        <option value="android">Android</option>
+                        <option value="ios">iOS</option>
+                        <option value="windows">Windows</option>
+                        <option value="mac">macOS</option>
+                        <option value="web">Web</option>
+                    </select>
+                </div>
+
+                <!-- Versi WhatsApp -->
+                <div class="form-group">
+                    <label for="version">Versi WhatsApp *</label>
+                    <input type="text" id="version" name="version" required placeholder="Contoh: 2.24.10.74">
+                </div>
+
+                <!-- Tanggal Bug Ditemukan -->
+                <div class="form-group">
+                    <label for="bugDate">Tanggal Ditemukan *</label>
+                    <input type="date" id="bugDate" name="bugDate" required>
+                </div>
+
+                <!-- Deskripsi Bug -->
+                <div class="form-group">
+                    <label for="description">Deskripsi Bug *</label>
+                    <textarea id="description" name="description" required placeholder="Jelaskan bug secara detail, langkah-langkah untuk mereproduksi, dan hasil yang diharapkan..."></textarea>
+                </div>
+
+                <!-- Langkah Reproduksi -->
+                <div class="form-group">
+                    <label for="steps">Langkah-Langkah Reproduksi *</label>
+                    <textarea id="steps" name="steps" required placeholder="1. Buka WhatsApp&#10;2. Lakukan...&#10;3. Bug terjadi ketika..."></textarea>
+                </div>
+
+                <!-- Upload Screenshot -->
+                <div class="form-group">
+                    <label>Upload Screenshot/Video (Opsional)</label>
+                    <div class="file-upload">
+                        <input type="file" id="attachment" name="attachment" accept="image/*,video/*">
+                        <label for="attachment">
+                            📎 Klik untuk upload atau drag file ke sini
+                        </label>
+                    </div>
+                    <div class="file-name" id="fileName"></div>
+                </div>
+
+                <!-- Catatan Tambahan -->
+                <div class="form-group">
+                    <label for="notes">Catatan Tambahan</label>
+                    <textarea id="notes" name="notes" placeholder="Informasi tambahan atau konteks lainnya..."></textarea>
+                </div>
+
+                <!-- Tombol Submit -->
+                <div class="button-group">
+                    <button type="submit" class="btn btn-submit">✓ Kirim Laporan</button>
+                    <button type="reset" class="btn btn-reset">↻ Reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let selectedPriority = '';
+
+        // Set default date to today
+        document.getElementById('bugDate').valueAsDate = new Date();
+
+        // Priority selection
+        function setPriority(priority) {
+            selectedPriority = priority;
+            document.getElementById('priority').value = priority;
+
+            document.querySelectorAll('.priority-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-priority="${priority}"]`).classList.add('active');
+        }
+
+        // File upload handler
+        document.getElementById('attachment').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || '';
+            document.getElementById('fileName').textContent = fileName ? `✓ ${fileName}` : '';
+        });
+
+        // Drag and drop handler
+        const fileUpload = document.querySelector('.file-upload');
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileUpload.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        fileUpload.addEventListener('drop', function(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            document.getElementById('attachment').files = files;
+            document.getElementById('fileName').textContent = files[0]?.name ? `✓ ${files[0].name}` : '';
+        });
+
+        // Form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            // Validasi prioritas
+            if (!selectedPriority) {
+                showAlert('Pilih tingkat prioritas terlebih dahulu', 'error');
+                return;
+            }
+
+            // Validasi jenis bug
+            const bugTypes = document.querySelectorAll('input[name="bugType"]:checked');
+            if (bugTypes.length === 0) {
+                showAlert('Pilih minimal satu jenis bug', 'error');
+                return;
+            }
+
+            // Tampilkan loading
+            document.getElementById('loading').classList.add('show');
+
+            // Simulasi pengiriman data
+            setTimeout(() => {
+                // Kumpulkan data form
+                const formData = {
+                    fullName: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    whatsapp: document.getElementById('whatsapp').value,
+                    priority: selectedPriority,
+                    bugTypes: Array.from(bugTypes).map(cb => cb.value),
+                    device: document.getElementById('device').value,
+                    version: document.getElementById('version').value,
+                    bugDate: document.getElementById('bugDate').value,
+                    description: document.getElementById('description').value,
+                    steps: document.getElementById('steps').value,
+                    notes: document.getElementById('notes').value,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Simpan ke localStorage (untuk demo)
+                const reports = JSON.parse(localStorage.getItem('bugReports') || '[]');
+                reports.push(formData);
+                localStorage.setItem('bugReports', JSON.stringify(reports));
+
+                document.getElementById('loading').classList.remove('show');
+                showAlert('✓ Laporan bug berhasil dikirim! Tim kami akan segera meninjau.', 'success');
+
+                // Reset form
+                document.getElementById('bugReportForm').reset();
+                selectedPriority = '';
+                document.getElementById('priority').value = '';
+                document.getElementById('fileName').textContent = '';
+                document.querySelectorAll('.priority-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById('bugDate').valueAsDate = new Date();
+            }, 2000);
+        }
+
+        // Alert handler
+        function showAlert(message, type) {
+            const alertEl = document.getElementById('alert');
+            alertEl.textContent = message;
+            alertEl.className = `alert ${type} show`;
+
+            setTimeout(() => {
+                alertEl.classList.remove('show');
+            }, 5000);
+        }
+
+        // Format WhatsApp number
+        document.getElementById('whatsapp').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '');
+        });
+    </script>
+</body>
+</html>
